@@ -12,3 +12,9 @@
 
 1. check g++ / mpicc / mpirun / gdb installed and the location
 [debug](https://iamsorush.com/posts/debug-mpi-vs-code/)
+
+## mpi run -np 4 debug -gdb
+
+# GPAW debug replay
+
+[replay](https://gitlab.com/gpaw/gpaw/-/issues/269)
