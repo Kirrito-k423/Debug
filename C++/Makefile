@@ -1,36 +1,33 @@
-CC=mpicc
-CXX=mpicxx
-CFLAGS= -mavx2
-OPENMP=-fopenmp
+CC=gcc
+CXX=g++
+CFLAGS= 
+OPENMP=
 SOURCES:=$(shell find $(.) -name '*.c')
-SOURCESCXX:=$(shell find $(.) -name '*.cpp')
+# SOURCESCXX:=$(shell find $(.) -name '*.cpp')
+SOURCESCXX:=$(shell find . -type f \( -name "*.cpp" -not -name "tsjCommonFunc.cpp" \) -print)
 LIB=-lm
 OBJS=$(SOURCES:%.c=%)
 OBJS+=$(SOURCESCXX:%.cpp=%)
-DEBUG=
+DEBUG=-g 
+DEFINE=-DDEBUG
 
-SRC_DIR_1 = ./Lab1
-SRCS_1 = $(shell find $(.) -name '*.c')
-FILENAME_1 = $(SRCS_1:.c=)
-
-# lab1 : $(FILENAME_1)
-# 	@echo $(SRCS_1)
-# 	@echo "lab1编译完成"
-# 	if [ ! -d "build" ]; then mkdir build; fi
-# 	mv $(FILENAME_1) build
 
 all : $(OBJS)
 	@echo $(SOURCES) $(SOURCESCXX)
 	@echo "编译完成"
 	@echo $(OBJS)
-	if [ ! -d "build" ]; then mkdir build; fi
+	if [ ! -d "build"  ]; then mkdir build; fi
+	rm tsjCommonFunc.o
 	mv $(OBJS) build
 
-%: %.c
-	$(CC) $(DEBUG) $(CFLAGS) $(OPENMP) $< $(LIB) -o $@
+tsjCommonFunc.o:tsjCommonFunc.cpp 
+	$(CXX) $(DEBUG) $(DEFINE) $(OPENMP) $(LIB) -c $< -o $@
 
-%: %.cpp
-	$(CXX) $(DEBUG) $(OPENMP) $< $(LIB) -o $@
+%: %.c tsjCommonFunc.o
+	$(CC) $(DEBUG)  $(DEFINE) $(CFLAGS) $(OPENMP) $< tsjCommonFunc.o $(LIB) -o $@
+
+%: %.cpp tsjCommonFunc.o
+	$(CXX) $(DEBUG)  $(DEFINE) $(OPENMP) $< tsjCommonFunc.o $(LIB) -o $@
 
 .PHONY: clean showVariable
 
